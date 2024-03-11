@@ -23,7 +23,6 @@
 //! `From<String>` is implemented for the enum, and will automatically wrap the string in the correct variant.
 
 #![deny(
-    warnings,
     missing_debug_implementations,
     trivial_casts,
     trivial_numeric_casts,
