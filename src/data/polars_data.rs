@@ -33,7 +33,9 @@ impl From<DataFrame> for UrlData {
                     AnyValue::UInt8(val) => json!(val),
                     AnyValue::Float32(val) => json!(val),
                     AnyValue::Float64(val) => json!(val),
-                    AnyValue::Utf8(val) => json!(val),
+                    AnyValue::String(val) => json!(val),
+                    // AnyValue::StringOwned(val) => json!(val),
+                    // AnyValue::Utf8(val) => json!(val),
                     AnyValue::List(val) => match val.dtype() {
                         DataType::Int64 => {
                             let vec: Vec<Option<_>> = val.i64().unwrap().into_iter().collect();
@@ -75,8 +77,8 @@ impl From<DataFrame> for UrlData {
                             let vec: Vec<Option<_>> = val.f64().unwrap().into_iter().collect();
                             json!(vec)
                         }
-                        DataType::Utf8 => {
-                            let vec: Vec<Option<_>> = val.utf8().unwrap().into_iter().collect();
+                        DataType::String => {
+                            let vec: Vec<Option<_>> = val.str().unwrap().into_iter().collect();
                             json!(vec)
                         }
                         x => panic!(
@@ -89,7 +91,7 @@ impl From<DataFrame> for UrlData {
                     AnyValue::Datetime(val, _, _) => json!(val),
                     AnyValue::Duration(val, _) => json!(val),
                     AnyValue::Time(val) => json!(val),
-                    x => panic!("unable to parse column: {} with value: {}", column, x),
+                    x => panic!("unable to parse column: {} with value: {:?}", column, x),
                 };
                 row.insert(*column, value);
             }
