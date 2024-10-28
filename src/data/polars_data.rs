@@ -13,9 +13,9 @@ impl From<DataFrame> for UrlData {
         let mut iters = df
             .get_columns()
             .iter()
-            .map(|s| s.iter())
+            .map(|s| s.phys_iter())
             .collect::<Vec<_>>();
-        let columns: Vec<&str> = df.get_column_names();
+        let columns = df.get_column_names();
         let mut res = vec![];
         for _ in 0..df.height() {
             let mut row = HashMap::new();
@@ -34,7 +34,8 @@ impl From<DataFrame> for UrlData {
                     AnyValue::Float32(val) => json!(val),
                     AnyValue::Float64(val) => json!(val),
                     AnyValue::String(val) => json!(val),
-                    // AnyValue::StringOwned(val) => json!(val),
+                    AnyValue::Categorical(val, l, _) => json!(l.get(val)),
+                    AnyValue::StringOwned(val) => json!(val),
                     // AnyValue::Utf8(val) => json!(val),
                     AnyValue::List(val) => match val.dtype() {
                         DataType::Int64 => {
